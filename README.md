@@ -1,6 +1,6 @@
 # playit
 
-Use Play/Pause button on keyboard to control audio players on websites. (Currently only working for [Songza](http://songza.com).)
+Use Play/Pause button on keyboard to control audio players on websites. (Currently only working for [Songza](http://songza.com) and [Pandora](http://pandora.com).)
 
 ## Install
 
@@ -14,6 +14,8 @@ WebSocket server statically set to use port 3000 for now.
     $ babel-node server.js
 
 ## Client
+
+Add in your ip address in client.js and uncomment the website (the `ws.onmessage` callback) you want to control.
 
     $ webpack client.js bundle.js
     $ pbcopy < bundle.js
