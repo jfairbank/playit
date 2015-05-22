@@ -20,4 +20,4 @@ Add in your ip address in client.js and uncomment the website (the `ws.onmessage
     $ webpack client.js bundle.js
     $ pbcopy < bundle.js
 
-Open devtools, paste, and hit enter. Now your Play/Pause key should control Songza's Play/Pause button.
+Open devtools, paste, and hit enter. Now your Play/Pause key should control the Play/Pause button(s) on the website.
