@@ -6,7 +6,7 @@ Use the Play/Pause key on your keyboard to control audio players on websites. (C
 
     $ npm install -g playit
 
-## run
+## Run Server
 
 Playit works via a WebSocket connection from the audio website and a server running on your machine. To start the server run:
 
