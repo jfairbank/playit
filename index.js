@@ -41,7 +41,7 @@ function copyToCliboard(data) {
 }
 
 function copyClientCode() {
-  var filename = __dirname + '/dist/client.js';
+  var filename = __dirname + '/dist/client-bundle.js';
 
   fs.readFileAsync(filename, 'utf-8')
     .then(copyToCliboard)
