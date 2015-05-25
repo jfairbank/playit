@@ -1,27 +1,25 @@
 # playit
 
-Use Play/Pause button on keyboard to control audio players on websites. (Currently only working for [Songza](http://songza.com) and [Pandora](http://pandora.com).)
+Use the Play/Pause key on your keyboard to control audio players on websites. (Currently only working for [Songza](http://songza.com) and [Pandora](http://pandora.com).)
 
 ## Installation
 
-    $ git clone git@github.com:jfairbank/playit.git && cd playit
-    $ npm install -g babel
-    $ npm install
+    $ npm install -g playit
 
-## Client Configuration
+## run
 
-Add in your host/ip address in `src/client.js`.
+Playit works via a WebSocket connection from the audio website and a server running on your machine. To start the server run:
 
-## Server
+    $ playit start
 
-The websocket server is set to use port 3000 for now. The web server for the remote Play/Pause button is set to use port 8080 for now.
+This will start a WebSocket server and an HTTP server on ports 3000 and 8080, respectively. You can change the ports via `-p` and `--httpPort`:
 
-    $ npm run server
+    $ playit start -p 3001 --httpPort=8888
 
 ## Run Client
 
-After starting the server, copy the contents of `dist/client.js`. Open devtools, paste, and hit enter. Now your Play/Pause key should control the Play/Pause button(s) on the website.
+After starting the server, client code will be copied to your clipboard. Open devtools, paste, and hit enter. Now your Play/Pause key should control the Play/Pause button(s) on the website. If you accidentally copy over the contents in your clipboard, you can run `$ playit client` in another terminal window. **NOTE:** You MUST run `$ playit start` to generate the client code for the first time, or `$ playit client` won't work!
 
 ## Remote Control
 
-After starting the server, open `http://<your host>:8080` in a browser. The Play/Pause button should remotely control playback as well.
+After starting the server, open `http://<your host>:8080` in a browser. The Play/Pause button on the webpage should remotely control playback as well. This is ideal if you want to control your music from a mobile device.
