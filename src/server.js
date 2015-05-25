@@ -1,4 +1,3 @@
-import webpack from 'webpack';
 import express from 'express';
 import {Server as WebSocketServer} from 'ws';
 import {compile as compileClient} from './client-compile';

@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-require('babel/register');
-
 var yargs = require('yargs');
 var fs = require('fs');
 var cp = require('copy-paste');
@@ -32,7 +30,7 @@ var command = argv._[0];
 Promise.promisifyAll(fs);
 
 function startServer(wsPort, httpPort) {
-  var server = require('./src/server');
+  var server = require('./dist/server');
   return server.start(wsPort, httpPort);
 }
 

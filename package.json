@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/jfairbank/playit",
   "dependencies": {
-    "babel": "^5.4.7",
+    "babel-runtime": "^5.4.7",
     "bluebird": "^2.9.26",
     "copy-paste": "^1.1.2",
     "express": "^4.12.4",
@@ -27,5 +27,10 @@
   "preferGlobal": true,
   "bin": {
     "playit": "index.js"
+  },
+  "devDependencies": {
+    "babel": "^5.4.7",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0"
   }
 }
