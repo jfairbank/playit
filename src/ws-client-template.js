@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 
-const port = 3000;
-const host = '<insert your host here>';
+const port = '<%= port %>';
+const host = '<%= host %>';
 const url = `ws://${host}:${port}`;
 
 export function createWebSocket() {

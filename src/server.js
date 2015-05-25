@@ -1,54 +1,22 @@
 import webpack from 'webpack';
 import express from 'express';
 import {Server as WebSocketServer} from 'ws';
+import {compile as compileClient} from './client-compile';
 
-const httpPort = 8080;
-const wsPort = 3000;
 const mediakeys = require('mediakeys').listen();
 
-function compile() {
-  function noop() {}
-
-  const commonConfig = {
-    module: {
-      loaders: [
-        { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
-      ]
-    }
-  };
-
-  const remoteConfig = Object.assign({
-    entry: __dirname + '/remote.js',
-    output: {
-      path: __dirname + '/../public',
-      filename: 'remote.js'
-    }
-  }, commonConfig);
-
-  const clientConfig = Object.assign({
-    entry: __dirname + '/client.js',
-    output: {
-      path: __dirname + '/../dist',
-      filename: 'client.js'
-    }
-  }, commonConfig);
-
-  webpack(remoteConfig).run(noop);
-  webpack(clientConfig).run(noop);
-}
-
-function runWebServer() {
+function runWebServer(port) {
   const app = express();
 
   app.use(express.static(__dirname + '/../public'));
 
-  app.listen(httpPort, () => {
-    console.log(`HTTP server listening on port ${httpPort}...`);
+  app.listen(port, () => {
+    console.log(`HTTP server listening on port ${port}...`);
   });
 }
 
-function runWebSocketServer() {
-  const wss = new WebSocketServer({ port: wsPort });
+function runWebSocketServer(port) {
+  const wss = new WebSocketServer({ port });
 
   wss.broadcast = (data) => {
     wss.clients.forEach((client) => client.send(data));
@@ -68,9 +36,12 @@ function runWebSocketServer() {
     ws.on('close', () => mediakeys.removeListener('play', play));
   });
 
-  console.log(`Web socket server listening on port ${wsPort}...`);
+  console.log(`Web socket server listening on port ${port}...`);
 }
 
-compile();
-runWebServer();
-runWebSocketServer();
+export function start(wsPort, httpPort) {
+  return compileClient(wsPort).then(() => {
+    runWebServer(httpPort);
+    runWebSocketServer(wsPort);
+  });
+}
