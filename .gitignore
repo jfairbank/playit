@@ -29,3 +29,4 @@ node_modules
 dist/client.js
 dist/ws-client.js
 public/remote.js
+src/ws-client.js
