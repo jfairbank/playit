@@ -1,6 +1,6 @@
 # playit
 
-Use the Play/Pause key on your keyboard to control audio players on websites. (Currently only working for [Songza](http://songza.com) and [Pandora](http://pandora.com).)
+Use the Play/Pause key on your keyboard to control audio players on websites. (Currently only working for [Songza](http://songza.com), [Pandora](http://pandora.com), and [Last.fm](http://last.fm).)
 
 ## Installation
 
@@ -23,3 +23,13 @@ After starting the server, client code will be copied to your clipboard. Open de
 ## Remote Control
 
 After starting the server, open `http://<your host>:8080` in a browser. The Play/Pause button on the webpage should remotely control playback as well. This is ideal if you want to control your music from a mobile device.
+
+## Contributing
+
+Please feel free to suggest improvements or features or add support for other audio players!
+
+Ensure gulp is installed:
+
+    $ npm install -g gulp
+
+Make changes in the `src` directory. Run `gulp compile`, commit changes to `src` and `dist` directories, and make a PR.
