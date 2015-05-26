@@ -1,6 +1,6 @@
 {
   "name": "playit",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0",
   "description": "Control audio players on websites with your keyboard's Play/Pause key",
   "repository": {
     "type": "git",
