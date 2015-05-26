@@ -1,25 +1,7 @@
 import {createWebSocket} from './ws-client';
+import {run as runForHostname} from './websites.js';
 
-const websites = {
-  'songza.com'() {
-    jQuery('.miniplayer-control-play-pause').click();
-  },
-
-  'pandora.com'() {
-    let $playButton = jQuery('.playButton');
-    let $pauseButton = jQuery('.pauseButton');
-
-    if ($playButton.is(':hidden')) {
-      $pauseButton.click();
-    } else {
-      $playButton.click();
-    }
-  }
-};
-
-const play = websites[document.location.hostname];
-
-if (play) {
+runForHostname(document.location.hostname, (play) => {
   const ws = createWebSocket();
 
   ws.onmessage = ({data}) => {
@@ -27,4 +9,4 @@ if (play) {
       play();
     }
   };
-}
+});
