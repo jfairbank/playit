@@ -3,9 +3,14 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports.createWebSocket = createWebSocket;
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+exports.create = create;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _ws = require('ws');
 
@@ -15,6 +20,36 @@ var port = '<%= port %>';
 var host = '<%= host %>';
 var url = 'ws://' + host + ':' + port;
 
-function createWebSocket() {
-  return new _ws2['default'](url);
+var WS = (function () {
+  function WS() {
+    _classCallCheck(this, WS);
+
+    this._ws = new _ws2['default'](url);
+  }
+
+  _createClass(WS, [{
+    key: 'on',
+    value: function on(key, cb) {
+      this._ws['on' + key] = cb;
+    }
+  }, {
+    key: 'send',
+    value: function send(data) {
+      this._ws.send(JSON.stringify(data));
+    }
+  }, {
+    key: 'nowPlaying',
+    value: function nowPlaying(content) {
+      this.send({
+        content: content,
+        action: 'now-playing'
+      });
+    }
+  }]);
+
+  return WS;
+})();
+
+function create() {
+  return new WS();
 }

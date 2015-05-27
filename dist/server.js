@@ -11,6 +11,10 @@ var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
 
+var _nodeNotifier = require('node-notifier');
+
+var _nodeNotifier2 = _interopRequireDefault(_nodeNotifier);
+
 var _ws = require('ws');
 
 var _clientCompile = require('./client-compile');
@@ -40,10 +44,28 @@ function runWebSocketServer(port) {
     var play = ws.send.bind(ws, 'play');
 
     mediakeys.on('play', play);
+    mediakeys.on('next', function () {
+      return ws.send('nextSong');
+    });
 
-    ws.on('message', function (data) {
-      if (data === 'remote-play') {
-        wss.broadcast('play');
+    ws.on('message', function (json) {
+      var _JSON$parse = JSON.parse(json);
+
+      var action = _JSON$parse.action;
+      var content = _JSON$parse.content;
+
+      switch (action) {
+        case 'remote-play':
+          wss.broadcast('play');
+          break;
+
+        case 'now-playing':
+          _nodeNotifier2['default'].notify({
+            title: content.website,
+            message: content.title,
+            icon: content.icon
+          });
+          break;
       }
     });
 

@@ -1,4 +1,5 @@
 import express from 'express';
+import notifier from 'node-notifier';
 import {Server as WebSocketServer} from 'ws';
 import {compile as compileClient} from './client-compile';
 
@@ -25,10 +26,23 @@ function runWebSocketServer(port) {
     const play = ws.send.bind(ws, 'play');
 
     mediakeys.on('play', play);
+    mediakeys.on('next', () => ws.send('nextSong'));
 
-    ws.on('message', (data) => {
-      if (data === 'remote-play') {
-        wss.broadcast('play');
+    ws.on('message', (json) => {
+      const {action, content} = JSON.parse(json);
+
+      switch (action) {
+        case 'remote-play':
+          wss.broadcast('play');
+          break;
+
+        case 'now-playing':
+          notifier.notify({
+            title: content.website,
+            message: content.title,
+            icon: content.icon
+          });
+          break;
       }
     });
 
