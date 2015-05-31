@@ -1,8 +1,26 @@
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 
 export default class BasePlayer extends EventEmitter {
   static create() {
     return new this();
+  }
+
+  constructor() {
+    super();
+    this.initialize();
+  }
+
+  initialize() {}
+
+  nowPlaying(song) {
+    if (song) {
+      this.emit('now-playing', song);
+    }
+  }
+
+  async checkNowPlaying() {
+    const song = await this.getCurrentSong();
+    this.nowPlaying(song);
   }
 
   _click(selector) {

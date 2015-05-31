@@ -17,7 +17,7 @@ class WS {
     this._ws.send(JSON.stringify(data));
   }
 
-  nowPlaying(content) {
+  sendNowPlaying(content) {
     this.send({
       content,
       action: 'now-playing'

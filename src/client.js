@@ -1,10 +1,9 @@
-import {create as createWebSocket} from './ws-client';
-import {getForHost as getPlayerForHost} from './players';
+import { create as createWebSocket } from './ws-client';
+import { getForHost as getPlayerForHost } from './players';
 
 const handlers = {
-  play(player, ws) {
+  play(player) {
     player.play();
-    checkCurrentlyPlaying(player, ws);
   },
 
   nextSong(player) {
@@ -12,27 +11,21 @@ const handlers = {
   }
 };
 
-function nowPlaying(player, ws) {
-  player.getCurrentSong().then((song) => {
-    ws.nowPlaying({
-      website: player.getName(),
+function sendNowPlaying(ws, player, song) {
+  ws.sendNowPlaying({
+    player: player.name,
+    song: {
       title: `${song.title} by ${song.artist}`,
       icon: song.icon
-    });
+    }
   });
-}
-
-function checkCurrentlyPlaying(player, ws) {
-  if (player.isPlaying()) {
-    nowPlaying(player, ws);
-  }
 }
 
 function initWebSocket(player) {
   const ws = createWebSocket();
 
-  function onNextSong() {
-    nowPlaying(player, ws);
+  function nowPlaying(song) {
+    sendNowPlaying(ws, player, song);
   }
 
   ws.on('message', ({data}) => {
@@ -45,20 +38,17 @@ function initWebSocket(player) {
 
   ws.on('open', () => {
     // Send notification when a new song plays
-    player.addListener('next-song', onNextSong);
-
-    // Send notification for a currently playing song
-    if (player.isPlaying()) {
-      checkCurrentlyPlaying(player, ws);
-    }
+    player.addListener('now-playing', nowPlaying);
   });
 
   ws.on('close', () => {
-    player.removeListener('next-song', onNextSong);
+    player.removeListener('now-playing', nowPlaying);
 
     // Try reconnecting
     setTimeout(() => { initWebSocket(player); }, 1000);
   });
+
+  player.checkNowPlaying();
 }
 
 getPlayerForHost(document.location.hostname, initWebSocket);

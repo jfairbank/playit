@@ -1,18 +1,20 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Promise = require('babel-runtime/core-js/promise')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+_Object$defineProperty(exports, '__esModule', {
   value: true
 });
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var _lodashLangIsEqual = require('lodash/lang/isEqual');
 
@@ -26,26 +28,27 @@ var PandoraPlayer = (function (_BasePlayer) {
   function PandoraPlayer() {
     _classCallCheck(this, PandoraPlayer);
 
-    _get(Object.getPrototypeOf(PandoraPlayer.prototype), 'constructor', this).call(this);
-    this._pollForCurrentSong();
+    if (_BasePlayer != null) {
+      _BasePlayer.apply(this, arguments);
+    }
   }
 
   _inherits(PandoraPlayer, _BasePlayer);
 
   _createClass(PandoraPlayer, [{
-    key: 'getName',
-    value: function getName() {
+    key: 'initialize',
+    value: function initialize() {
+      this._pollForCurrentSong();
+    }
+  }, {
+    key: 'name',
+    get: function () {
       return 'Pandora';
     }
   }, {
     key: 'play',
     value: function play() {
       this._toggle('.playButton', '.pauseButton');
-    }
-  }, {
-    key: 'isPlaying',
-    value: function isPlaying() {
-      return this._isHidden(document.querySelector('.playButton'));
     }
   }, {
     key: 'nextSong',
@@ -55,23 +58,7 @@ var PandoraPlayer = (function (_BasePlayer) {
   }, {
     key: 'getCurrentSong',
     value: function getCurrentSong() {
-      return Promise.resolve(this._currentSong || this._getCurrentPlayingSong());
-
-      //if (!this._currentSongPromise) {
-      //this._currentSongPromise = new Promise((resolve) => {
-      //const helper = () => {
-      //if (this._currentSong) {
-      //resolve(this._currentSong);
-      //} else {
-      //setTimeout(helper, 1000);
-      //}
-      //};
-
-      //helper();
-      //});
-      //}
-
-      //return this._currentSongPromise;
+      return _Promise.resolve(this._currentSong || this._getCurrentPlayingSong());
     }
   }, {
     key: '_getCurrentlyPlayingSong',
@@ -99,10 +86,7 @@ var PandoraPlayer = (function (_BasePlayer) {
 
       if (!(0, _lodashLangIsEqual2['default'])(this._currentSong, song)) {
         this._currentSong = song;
-
-        if (song) {
-          this.emit('next-song', song);
-        }
+        this.nowPlaying(song);
       }
 
       setTimeout(this._pollForCurrentSong.bind(this), 5000);

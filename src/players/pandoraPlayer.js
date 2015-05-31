@@ -2,21 +2,16 @@ import isEqual from 'lodash/lang/isEqual';
 import BasePlayer from './basePlayer';
 
 export default class PandoraPlayer extends BasePlayer {
-  constructor() {
-    super();
+  initialize() {
     this._pollForCurrentSong();
   }
 
-  getName() {
+  get name() {
     return 'Pandora';
   }
 
   play() {
     this._toggle('.playButton', '.pauseButton');
-  }
-
-  isPlaying() {
-    return this._isHidden(document.querySelector('.playButton'));
   }
 
   nextSong() {
@@ -25,22 +20,6 @@ export default class PandoraPlayer extends BasePlayer {
 
   getCurrentSong() {
     return Promise.resolve(this._currentSong || this._getCurrentPlayingSong());
-
-    //if (!this._currentSongPromise) {
-      //this._currentSongPromise = new Promise((resolve) => {
-        //const helper = () => {
-          //if (this._currentSong) {
-            //resolve(this._currentSong);
-          //} else {
-            //setTimeout(helper, 1000);
-          //}
-        //};
-
-        //helper();
-      //});
-    //}
-
-    //return this._currentSongPromise;
   }
 
   _getCurrentlyPlayingSong() {
@@ -65,12 +44,9 @@ export default class PandoraPlayer extends BasePlayer {
 
     if (!isEqual(this._currentSong, song)) {
       this._currentSong = song;
-
-      if (song) {
-        this.emit('next-song', song);
-      }
+      this.nowPlaying(song);
     }
 
-    setTimeout(this._pollForCurrentSong.bind(this), 5000);
+    setTimeout(::this._pollForCurrentSong, 5000);
   }
 }

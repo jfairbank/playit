@@ -1,12 +1,11 @@
 import BasePlayer from './basePlayer';
 
 export default class SongzaPlayer extends BasePlayer {
-  constructor() {
-    super();
+  initialize() {
     this._initEvents();
   }
 
-  getName() {
+  get name() {
     return 'Songza';
   }
 
@@ -14,47 +13,43 @@ export default class SongzaPlayer extends BasePlayer {
     this._click('.miniplayer-control-play-pause');
   }
 
-  isPlaying() {
-    return this._isHidden(
-      document.querySelector('.miniplayer-control-play-pause .ui-icon-ios7-play')
-    );
-  }
-
   getCurrentSong() {
-    return this._getPlayer()
-      .then((player) => this._serializeSong(player.get('current')));
+    return new Promise(async (resolve) => {
+      const app = await this._getApp();
+      const player = app.getPlayer();
+
+      if (!player) {
+        return resolve(null);
+      }
+
+      const song = player.model.get('current');
+      resolve(this._serializeSong(song));
+    });
   }
 
   nextSong() {
     this._click('.miniplayer-control-skip');
   }
 
-  _initEvents() {
-    this._getPlayer().then((player) => {
-      player.on('change:current', (_, song) => {
-        if (song) {
-          this.emit('next-song', this._serializeSong(song));
-        }
-      });
-    });
+  async _initEvents() {
+    const app = await this._getApp();
+
+    app.on({
+      'player-song-play': this._onSongPlay,
+      'player-song-started': this._onSongPlay
+    }, this);
   }
 
-  _getPlayer() {
+  _onSongPlay({ song }) {
+    this.nowPlaying(this._serializeSong(song));
+  }
+
+  _getApp() {
     if (!this._playerPromise) {
-      this._playerPromise = new Promise((resolve, reject) => {
+      this._playerPromise = new Promise((resolve) => {
         // Avoid WebPack interfering with AMD `require` call
         const req = window.require;
-
-        req(['songza/app'], (App) => {
-          const playerView = App.getInstance().player;
-
-          if (playerView) {
-            resolve(playerView.model);
-          } else {
-            reject();
-            this._playerPromise = null;
-          }
-        });
+        req(['songza/app'], (App) => resolve(App.getInstance()));
       });
     }
 
@@ -62,6 +57,10 @@ export default class SongzaPlayer extends BasePlayer {
   }
 
   _serializeSong(song) {
+    if (!song) {
+      return null;
+    }
+
     return {
       title: song.get('title'),
       artist: song.get('artist'),

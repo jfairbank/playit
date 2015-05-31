@@ -1,15 +1,18 @@
+/* eslint-env node */
+
 import ip from 'ip';
 import webpack from 'webpack';
 import Promise from 'bluebird';
 import fs from 'fs';
+import path from 'path';
 import template from 'lodash/string/template';
 
 Promise.promisifyAll(fs);
 
 function compileWsClient(port) {
   const host = ip.address();
-  const src = __dirname + '/ws-client-template.js';
-  const dest = __dirname + '/ws-client.js';
+  const src = path.join(__dirname, '/ws-client-template.js');
+  const dest = path.join(__dirname, '/ws-client.js');
 
   return fs.readFileAsync(src, 'utf-8')
     .then((contents) => template(contents)({ host, port }))
@@ -21,18 +24,16 @@ function webpackCompile(config) {
 }
 
 export function compile(port) {
-  function noop() {}
-
   const remoteConfig = {
-    entry: __dirname + '/remote.js',
+    entry: path.join(__dirname, '/remote.js'),
     output: {
-      path: __dirname + '/../public',
+      path: path.join(__dirname, '/../public'),
       filename: 'remote.js'
     }
   };
 
   const clientConfig = {
-    entry: __dirname + '/client.js',
+    entry: path.join(__dirname, '/client.js'),
     output: {
       path: __dirname,
       filename: 'client-bundle.js'

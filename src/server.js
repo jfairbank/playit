@@ -1,14 +1,17 @@
+/* eslint-env node */
+
 import express from 'express';
 import notifier from 'node-notifier';
-import {Server as WebSocketServer} from 'ws';
-import {compile as compileClient} from './client-compile';
+import path from 'path';
+import { Server as WebSocketServer } from 'ws';
+import { compile as compileClient } from './client-compile';
 
 const mediakeys = require('mediakeys').listen();
 
 function runWebServer(port) {
   const app = express();
 
-  app.use(express.static(__dirname + '/../public'));
+  app.use(express.static(path.join(__dirname, '/../public')));
 
   app.listen(port, () => {
     console.log(`HTTP server listening on port ${port}...`);
@@ -29,7 +32,7 @@ function runWebSocketServer(port) {
     mediakeys.on('next', () => ws.send('nextSong'));
 
     ws.on('message', (json) => {
-      const {action, content} = JSON.parse(json);
+      const { action, content } = JSON.parse(json);
 
       switch (action) {
         case 'remote-play':
@@ -38,9 +41,9 @@ function runWebSocketServer(port) {
 
         case 'now-playing':
           notifier.notify({
-            title: content.website,
-            message: content.title,
-            icon: content.icon
+            title: content.player,
+            message: content.song.title,
+            icon: content.song.icon
           });
           break;
       }

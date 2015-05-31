@@ -1,7 +1,3 @@
-import isPlainObject from 'lodash/lang/isPlainObject';
-import isFunction from 'lodash/lang/isFunction';
-import Promise from 'bluebird';
-
 import SongzaPlayer from './players/songzaPlayer';
 import PandoraPlayer from './players/pandoraPlayer';
 

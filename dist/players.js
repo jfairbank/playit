@@ -1,23 +1,14 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+_Object$defineProperty(exports, '__esModule', {
   value: true
 });
+
 exports.getForHost = getForHost;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _lodashLangIsPlainObject = require('lodash/lang/isPlainObject');
-
-var _lodashLangIsPlainObject2 = _interopRequireDefault(_lodashLangIsPlainObject);
-
-var _lodashLangIsFunction = require('lodash/lang/isFunction');
-
-var _lodashLangIsFunction2 = _interopRequireDefault(_lodashLangIsFunction);
-
-var _bluebird = require('bluebird');
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
 
 var _playersSongzaPlayer = require('./players/songzaPlayer');
 

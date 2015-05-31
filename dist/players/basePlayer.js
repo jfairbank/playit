@@ -1,14 +1,20 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _get = require('babel-runtime/helpers/get')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+_Object$defineProperty(exports, '__esModule', {
   value: true
 });
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var _events = require('events');
 
@@ -16,14 +22,44 @@ var BasePlayer = (function (_EventEmitter) {
   function BasePlayer() {
     _classCallCheck(this, BasePlayer);
 
-    if (_EventEmitter != null) {
-      _EventEmitter.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(BasePlayer.prototype), 'constructor', this).call(this);
+    this.initialize();
   }
 
   _inherits(BasePlayer, _EventEmitter);
 
   _createClass(BasePlayer, [{
+    key: 'initialize',
+    value: function initialize() {}
+  }, {
+    key: 'nowPlaying',
+    value: function nowPlaying(song) {
+      if (song) {
+        this.emit('now-playing', song);
+      }
+    }
+  }, {
+    key: 'checkNowPlaying',
+    value: function checkNowPlaying() {
+      var song;
+      return _regeneratorRuntime.async(function checkNowPlaying$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            context$2$0.next = 2;
+            return this.getCurrentSong();
+
+          case 2:
+            song = context$2$0.sent;
+
+            this.nowPlaying(song);
+
+          case 4:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, null, this);
+    }
+  }, {
     key: '_click',
     value: function _click(selector) {
       document.querySelector(selector).click();

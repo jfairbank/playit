@@ -1,18 +1,22 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Promise = require('babel-runtime/core-js/promise')['default'];
+
+var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+_Object$defineProperty(exports, '__esModule', {
   value: true
 });
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var _basePlayer = require('./basePlayer');
 
@@ -22,15 +26,21 @@ var SongzaPlayer = (function (_BasePlayer) {
   function SongzaPlayer() {
     _classCallCheck(this, SongzaPlayer);
 
-    _get(Object.getPrototypeOf(SongzaPlayer.prototype), 'constructor', this).call(this);
-    this._initEvents();
+    if (_BasePlayer != null) {
+      _BasePlayer.apply(this, arguments);
+    }
   }
 
   _inherits(SongzaPlayer, _BasePlayer);
 
   _createClass(SongzaPlayer, [{
-    key: 'getName',
-    value: function getName() {
+    key: 'initialize',
+    value: function initialize() {
+      this._initEvents();
+    }
+  }, {
+    key: 'name',
+    get: function () {
       return 'Songza';
     }
   }, {
@@ -39,17 +49,39 @@ var SongzaPlayer = (function (_BasePlayer) {
       this._click('.miniplayer-control-play-pause');
     }
   }, {
-    key: 'isPlaying',
-    value: function isPlaying() {
-      return this._isHidden(document.querySelector('.miniplayer-control-play-pause .ui-icon-ios7-play'));
-    }
-  }, {
     key: 'getCurrentSong',
     value: function getCurrentSong() {
       var _this = this;
 
-      return this._getPlayer().then(function (player) {
-        return _this._serializeSong(player.get('current'));
+      return new _Promise(function callee$2$0(resolve) {
+        var app, player, song;
+        return _regeneratorRuntime.async(function callee$2$0$(context$3$0) {
+          while (1) switch (context$3$0.prev = context$3$0.next) {
+            case 0:
+              context$3$0.next = 2;
+              return this._getApp();
+
+            case 2:
+              app = context$3$0.sent;
+              player = app.getPlayer();
+
+              if (player) {
+                context$3$0.next = 6;
+                break;
+              }
+
+              return context$3$0.abrupt('return', resolve(null));
+
+            case 6:
+              song = player.model.get('current');
+
+              resolve(this._serializeSong(song));
+
+            case 8:
+            case 'end':
+              return context$3$0.stop();
+          }
+        }, null, _this);
       });
     }
   }, {
@@ -60,35 +92,43 @@ var SongzaPlayer = (function (_BasePlayer) {
   }, {
     key: '_initEvents',
     value: function _initEvents() {
-      var _this2 = this;
+      var app;
+      return _regeneratorRuntime.async(function _initEvents$(context$2$0) {
+        while (1) switch (context$2$0.prev = context$2$0.next) {
+          case 0:
+            context$2$0.next = 2;
+            return this._getApp();
 
-      this._getPlayer().then(function (player) {
-        player.on('change:current', function (_, song) {
-          if (song) {
-            _this2.emit('next-song', _this2._serializeSong(song));
-          }
-        });
-      });
+          case 2:
+            app = context$2$0.sent;
+
+            app.on({
+              'player-song-play': this._onSongPlay,
+              'player-song-started': this._onSongPlay
+            }, this);
+
+          case 4:
+          case 'end':
+            return context$2$0.stop();
+        }
+      }, null, this);
     }
   }, {
-    key: '_getPlayer',
-    value: function _getPlayer() {
-      var _this3 = this;
+    key: '_onSongPlay',
+    value: function _onSongPlay(_ref) {
+      var song = _ref.song;
 
+      this.nowPlaying(this._serializeSong(song));
+    }
+  }, {
+    key: '_getApp',
+    value: function _getApp() {
       if (!this._playerPromise) {
-        this._playerPromise = new Promise(function (resolve, reject) {
+        this._playerPromise = new _Promise(function (resolve) {
           // Avoid WebPack interfering with AMD `require` call
           var req = window.require;
-
           req(['songza/app'], function (App) {
-            var playerView = App.getInstance().player;
-
-            if (playerView) {
-              resolve(playerView.model);
-            } else {
-              reject();
-              _this3._playerPromise = null;
-            }
+            return resolve(App.getInstance());
           });
         });
       }
@@ -98,6 +138,10 @@ var SongzaPlayer = (function (_BasePlayer) {
   }, {
     key: '_serializeSong',
     value: function _serializeSong(song) {
+      if (!song) {
+        return null;
+      }
+
       return {
         title: song.get('title'),
         artist: song.get('artist'),
